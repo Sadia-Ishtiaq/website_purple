@@ -1,4 +1,3 @@
-tensorflow>=2.16.0
 streamlit
 rich
 pygments
