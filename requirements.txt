@@ -1,8 +1,8 @@
-streamlit
-rich
-pygments
-markdown-it-py
-mdurl
-flask
+streamlit==1.25.0
+ultralytics==8.4.22
+tensorflow==2.14.0
+numpy
 opencv-python-headless
-ultralytics==8.0.136
+pillow
+matplotlib
+setuptools>=65.5.0
