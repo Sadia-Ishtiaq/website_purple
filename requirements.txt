@@ -3,5 +3,6 @@ rich
 pygments
 markdown-it-py
 mdurl
-ultralytics==8.0.136
 flask
+opencv-python-headless
+ultralytics==8.0.136
