@@ -1,7 +1,7 @@
-flask
 streamlit
 rich
 pygments
 markdown-it-py
 mdurl
-ultralytics
+ultralytics==8.0.136
+flask
