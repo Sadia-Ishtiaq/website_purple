@@ -1,9 +1,6 @@
 tensorflow==2.15.0
-keras==2.15.0
-flask==3.0.0
-numpy==1.24.3
-ultralytics
-opencv-python-headless
-pillow
-matplotlib
-gunicorn
+streamlit
+rich
+pygments
+markdown-it-py
+mdurl
