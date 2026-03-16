@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroScan AI - {% block title %}Brain Tumor Detection{% endblock %}</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <a href="{{ url_for('chatbot') }}" 
+   class="text-gray-300 hover:text-purple-400 font-medium transition">
+   <i class="fa-regular fa-message mr-1"></i>AI Assistant
+</a>
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --accent-primary: #8b5cf6;
+            --accent-secondary: #6366f1;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+        }
+
+        .glass-effect {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .card-bg {
+            background-color: var(--bg-secondary);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .card-bg:hover {
+            border-color: var(--accent-primary);
+            box-shadow: 0 10px 30px -10px rgba(139, 92, 246, 0.3);
+        }
+
+        .hover-scale {
+            transition: transform 0.3s ease;
+        }
+
+        .hover-scale:hover {
+            transform: scale(1.05);
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes blob {
+            0% {
+                transform: translate(0px, 0px) scale(1);
+            }
+
+            33% {
+                transform: translate(30px, -50px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+
+            100% {
+                transform: translate(0px, 0px) scale(1);
+            }
+        }
+
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+
+        .animation-delay-4000 {
+            animation-delay: 4s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.5);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--accent-primary);
+            color: var(--accent-primary);
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-secondary);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="glass-effect fixed w-full z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <a href="{{ url_for('index') if not session.user_id else url_for('dashboard') }}"
+                    class="flex items-center gap-2 group">
+                    <div class="gradient-bg text-white p-2 rounded-lg group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-brain fa-lg"></i>
+                    </div>
+                    <span class="font-bold text-xl tracking-tight text-white">NeuroScan<span
+                            class="text-purple-400">AI</span></span>
+                </a>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    {% if session.user_id %}
+                    <a href="{{ url_for('dashboard') }}"
+                        class="text-gray-300 hover:text-purple-400 font-medium transition">Dashboard</a>
+                    <a href="{{ url_for('history') }}"
+                        class="text-gray-300 hover:text-purple-400 font-medium transition">History</a>
+                    <a href="{{ url_for('features') }}"
+                        class="text-gray-300 hover:text-purple-400 font-medium transition">Features</a>
+
+                    <!-- User Menu -->
+                    <div class="relative group">
+                        <button
+                            class="flex items-center gap-2 text-gray-300 hover:text-purple-400 font-medium transition">
+                            <img src="https://ui-avatars.com/api/?name={{ session.user_name }}&background=8b5cf6&color=fff&bold=true"
+                                class="w-8 h-8 rounded-full border-2 border-purple-500">
+                            <span>{{ session.user_name.split()[0] }}</span>
+                            <i class="fa-solid fa-chevron-down text-xs"></i>
+                        </button>
+
+                        <!-- Dropdown -->
+                        <div
+                            class="absolute right-0 mt-2 w-48 bg-[#1e293b] rounded-lg shadow-xl border border-purple-500/20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right">
+                            <div class="px-4 py-2 text-sm text-gray-300 border-b border-gray-700">
+                                <p class="font-semibold text-white">{{ session.user_name }}</p>
+                                <p class="text-xs text-gray-400">{{ session.user_email }}</p>
+                            </div>
+                            <a href="{{ url_for('dashboard') }}"
+                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-purple-600 hover:text-white transition">
+                                <i class="fa-regular fa-user mr-2"></i> Dashboard
+                            </a>
+                            <a href="{{ url_for('history') }}"
+                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-purple-600 hover:text-white transition">
+                                <i class="fa-regular fa-clock mr-2"></i> History
+                            </a>
+                            <div class="border-t border-gray-700"></div>
+                            <a href="{{ url_for('logout') }}"
+                                class="block px-4 py-2 text-sm text-red-400 hover:bg-red-600 hover:text-white transition">
+                                <i class="fa-solid fa-arrow-right-from-bracket mr-2"></i> Logout
+                            </a>
+                        </div>
+                    </div>
+                    {% else %}
+                    <a href="{{ url_for('index') }}"
+                        class="text-gray-300 hover:text-purple-400 font-medium transition">Home</a>
+                    <a href="{{ url_for('features') }}"
+                        class="text-gray-300 hover:text-purple-400 font-medium transition">Features</a>
+                    <a href="{{ url_for('about') }}"
+                        class="text-gray-300 hover:text-purple-400 font-medium transition">About</a>
+                    <a href="{{ url_for('contact') }}"
+                        class="text-gray-300 hover:text-purple-400 font-medium transition">Contact</a>
+                    <a href="{{ url_for('login') }}"
+                        class="text-purple-400 font-medium hover:bg-purple-600 hover:text-white px-4 py-2 rounded-lg transition">Log
+                        In</a>
+                    <a href="{{ url_for('register') }}"
+                        class="gradient-bg text-white font-medium px-5 py-2.5 rounded-lg shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5">
+                        Get Started
+                    </a>
+                    {% endif %}
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-gray-300" onclick="toggleMobileMenu()">
+                    <i class="fa-solid fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-[#1e293b] border-t border-purple-500/20">
+            <div class="px-4 py-2 space-y-2">
+                {% if session.user_id %}
+                <a href="{{ url_for('dashboard') }}"
+                    class="block py-2 text-gray-300 hover:text-purple-400">Dashboard</a>
+                <a href="{{ url_for('history') }}" class="block py-2 text-gray-300 hover:text-purple-400">History</a>
+                <a href="{{ url_for('features') }}" class="block py-2 text-gray-300 hover:text-purple-400">Features</a>
+                <a href="{{ url_for('logout') }}" class="block py-2 text-red-400">Logout</a>
+                {% else %}
+                <a href="{{ url_for('index') }}" class="block py-2 text-gray-300 hover:text-purple-400">Home</a>
+                <a href="{{ url_for('features') }}" class="block py-2 text-gray-300 hover:text-purple-400">Features</a>
+                <a href="{{ url_for('about') }}" class="block py-2 text-gray-300 hover:text-purple-400">About</a>
+                <a href="{{ url_for('contact') }}" class="block py-2 text-gray-300 hover:text-purple-400">Contact</a>
+                <a href="{{ url_for('login') }}" class="block py-2 text-purple-400">Login</a>
+                <a href="{{ url_for('register') }}"
+                    class="block py-2 gradient-bg text-white text-center rounded-lg">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <main class="flex-grow pt-16">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+            {% for category, message in messages %}
+            <div class="p-4 mb-4 rounded-lg flex items-center gap-3 shadow-lg
+                            {% if category == 'error' %} bg-red-900/20 text-red-400 border border-red-500/30
+                            {% elif category == 'success' %} bg-green-900/20 text-green-400 border border-green-500/30
+                            {% else %} bg-blue-900/20 text-blue-400 border border-blue-500/30 {% endif %}">
+                <i
+                    class="fa-solid {% if category == 'error' %}fa-circle-exclamation{% elif category == 'success' %}fa-circle-check{% else %}fa-circle-info{% endif %}"></i>
+                <span>{{ message }}</span>
+                <button onclick="this.parentElement.remove()" class="ml-auto hover:text-white">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#0f172a] border-t border-purple-500/20 pt-12 pb-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="gradient-bg text-white p-1.5 rounded">
+                            <i class="fa-solid fa-brain"></i>
+                        </div>
+                        <span class="font-bold text-lg text-white">NeuroScan AI</span>
+                    </div>
+                    <p class="text-gray-400 text-sm max-w-xs">
+                        Advanced AI-powered system for early detection and analysis of brain tumors,
+                        assisting healthcare professionals with rapid and accurate diagnostics.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-4 text-purple-400">Quick Links</h3>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="{{ url_for('index') }}" class="hover:text-purple-400 transition">Home</a></li>
+                        <li><a href="{{ url_for('about') }}" class="hover:text-purple-400 transition">About Us</a></li>
+                        <li><a href="{{ url_for('features') }}" class="hover:text-purple-400 transition">Features</a>
+                        </li>
+                        <li><a href="{{ url_for('contact') }}" class="hover:text-purple-400 transition">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-4 text-purple-400">Contact</h3>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><i class="fa-solid fa-envelope mr-2"></i> support@neuroscan.ai</li>
+                        <li><i class="fa-solid fa-phone mr-2"></i> +1 (555) 123-4567</li>
+                        <li><i class="fa-solid fa-location-dot mr-2"></i> New York, NY</li>
+                    </ul>
+                </div>
+            </div>
+            <div
+                class="border-t border-purple-500/20 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+                <p>&copy; 2024 NeuroScan AI. All rights reserved.</p>
+                <p>Final Year Project - Brain Tumor Detection & Classification</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        })
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Auto-hide flash messages after 5 seconds
+        setTimeout(() => {
+            document.querySelectorAll('[onclick="this.parentElement.remove()"]').forEach(btn => {
+                if (btn) btn.click();
+            });
+        }, 5000);
+    </script>
+
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+
+    <!-- Header -->
+    <div class="text-center mb-16" data-aos="fade-down">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Get in Touch</h1>
+        <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+            Have questions? We'd love to hear from you. Send us a message and we'll respond within 24 hours.
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Contact Info -->
+        <div class="lg:col-span-1" data-aos="fade-right">
+            <div class="bg-[#1e293b] rounded-2xl p-8 border border-purple-500/20">
+                <h2 class="text-2xl font-bold text-white mb-6">Contact Information</h2>
+
+                <div class="space-y-6">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-location-dot text-purple-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-white mb-1">Visit Us</h3>
+                            <p class="text-gray-400">123 Medical Center Drive<br>New York, NY 10001</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-phone text-purple-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-white mb-1">Call Us</h3>
+                            <p class="text-gray-400">+1 (555) 123-4567</p>
+                            <p class="text-sm text-gray-500">Mon-Fri, 9am-6pm EST</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-envelope text-purple-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-white mb-1">Email Us</h3>
+                            <p class="text-gray-400">support@neuroscan.ai</p>
+                            <p class="text-sm text-gray-500">24/7 support available</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="lg:col-span-2" data-aos="fade-left">
+            <div class="bg-[#1e293b] rounded-2xl p-8 border border-purple-500/20">
+                <h2 class="text-2xl font-bold text-white mb-6">Send a Message</h2>
+
+                <form method="POST" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">First Name</label>
+                            <input type="text" name="first_name" required
+                                class="w-full px-4 py-3 bg-[#0f172a] border border-purple-500/30 rounded-lg text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Last Name</label>
+                            <input type="text" name="last_name" required
+                                class="w-full px-4 py-3 bg-[#0f172a] border border-purple-500/30 rounded-lg text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Email Address</label>
+                        <input type="email" name="email" required
+                            class="w-full px-4 py-3 bg-[#0f172a] border border-purple-500/30 rounded-lg text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Subject</label>
+                        <input type="text" name="subject" required
+                            class="w-full px-4 py-3 bg-[#0f172a] border border-purple-500/30 rounded-lg text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Message</label>
+                        <textarea name="message" rows="5" required
+                            class="w-full px-4 py-3 bg-[#0f172a] border border-purple-500/30 rounded-lg text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"></textarea>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full gradient-bg text-white font-semibold px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition transform hover:-translate-y-1">
+                        <i class="fa-regular fa-paper-plane mr-2"></i>
+                        Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+  <!-- Map -->
+    <div class="mt-12" data-aos="fade-up">
+        <div class="bg-[#1e293b] rounded-2xl h-96 overflow-hidden border border-purple-500/20">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d193595.9147703055!2d-74.119763973092!3d40.69740344792413!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2s!4v1620000000000!5m2!1sen!2s"
+                width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" class="rounded-xl">
+            </iframe>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

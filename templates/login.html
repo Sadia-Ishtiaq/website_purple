@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center px-4 py-12">
+    <div class="max-w-md w-full">
+        <!-- Logo -->
+        <div class="text-center mb-8">
+            <a href="{{ url_for('index') }}" class="inline-flex items-center gap-2">
+                <div class="gradient-bg text-white p-3 rounded-xl">
+                    <i class="fa-solid fa-brain text-2xl"></i>
+                </div>
+                <span class="font-bold text-2xl text-white">NeuroScan<span class="text-purple-400">AI</span></span>
+            </a>
+        </div>
+
+        <!-- Login Card -->
+        <div class="bg-[#1e293b] rounded-2xl shadow-xl p-8 border border-purple-500/20">
+            <h2 class="text-2xl font-bold text-white mb-2 text-center">Welcome Back</h2>
+            <p class="text-gray-400 text-center mb-8">Sign in to your account</p>
+
+            <form method="POST" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-2">Email Address</label>
+                    <input type="email" name="email" value="{{ request.form.email or '' }}" required
+                        class="w-full px-4 py-3 bg-[#0f172a] border border-purple-500/30 rounded-lg text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-2">Password</label>
+                    <input type="password" name="password" required
+                        class="w-full px-4 py-3 bg-[#0f172a] border border-purple-500/30 rounded-lg text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500">
+                </div>
+
+                <button type="submit"
+                    class="w-full gradient-bg text-white font-semibold py-3 px-4 rounded-lg shadow-lg hover:shadow-xl transition transform hover:-translate-y-1">
+                    Sign In
+                </button>
+            </form>
+
+            <div class="mt-6 text-center">
+                <p class="text-gray-400">
+                    Don't have an account?
+                    <a href="{{ url_for('register') }}" class="text-purple-400 font-semibold hover:text-purple-300">
+                        Register here
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

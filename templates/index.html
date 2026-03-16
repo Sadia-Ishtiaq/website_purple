@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Advanced Brain Tumor Detection{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative overflow-hidden min-h-screen flex items-center">
+    <!-- Animated Background -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-purple-900/20 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-900/20 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
+        <div class="absolute top-40 left-40 w-80 h-80 bg-pink-900/20 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
+    </div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <!-- Left Content -->
+            <div data-aos="fade-right">
+                <!-- Badge -->
+                <div class="inline-flex items-center gap-2 bg-[#1e293b] backdrop-blur-sm px-4 py-2 rounded-full border border-purple-500/30 mb-8">
+                    <span class="relative flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-purple-500"></span>
+                    </span>
+                    <span class="text-sm font-semibold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                        AI-Powered Diagnostics
+                    </span>
+                </div>
+
+                <!-- Heading -->
+                <h1 class="text-5xl lg:text-7xl font-bold tracking-tight mb-6">
+                    <span class="text-white">AI Driven Early</span>
+                    <br />
+                    <span class="bg-gradient-to-r from-purple-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                        Brain Tumor Detection
+                    </span>
+                </h1>
+
+                <p class="text-xl text-gray-300 mb-8 leading-relaxed max-w-2xl">
+                    Advanced deep learning system for rapid and accurate brain tumor detection. 
+                    Upload MRI scans and get instant AI-powered analysis with precise tumor localization.
+                </p>
+
+                <!-- Stats -->
+                <div class="grid grid-cols-3 gap-6 mb-10">
+                    <div class="text-center p-4 bg-[#1e293b] backdrop-blur-sm rounded-2xl border border-purple-500/20">
+                        <div class="text-3xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">99.2%</div>
+                        <div class="text-sm text-gray-400 mt-1">Accuracy</div>
+                    </div>
+                    <div class="text-center p-4 bg-[#1e293b] backdrop-blur-sm rounded-2xl border border-purple-500/20">
+                        <div class="text-3xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">&lt;5s</div>
+                        <div class="text-sm text-gray-400 mt-1">Processing</div>
+                    </div>
+                    <div class="text-center p-4 bg-[#1e293b] backdrop-blur-sm rounded-2xl border border-purple-500/20">
+                        <div class="text-3xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">4</div>
+                        <div class="text-sm text-gray-400 mt-1">Tumor Types</div>
+                    </div>
+                </div>
+
+                <!-- CTA Buttons -->
+                <div class="flex flex-wrap gap-4">
+                    <a href="{{ url_for('register') }}" 
+                       class="group relative inline-flex items-center gap-2 gradient-bg text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg shadow-purple-500/30 hover:shadow-xl hover:scale-105 transition-all duration-300">
+                        <span>Get Started Free</span>
+                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                    <a href="#features" 
+                       class="inline-flex items-center gap-2 bg-[#1e293b] text-gray-300 px-8 py-4 rounded-2xl font-semibold text-lg border-2 border-purple-500/30 hover:border-purple-400 hover:text-purple-400 hover:shadow-lg transition-all duration-300">
+                        <i class="fa-regular fa-circle-play"></i>
+                        <span>Learn More</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right Content - 3D Brain Animation -->
+            <div class="relative hidden lg:block" data-aos="fade-left">
+                <div class="relative w-full h-[600px]">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="relative animate-float">
+                            <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full filter blur-3xl opacity-20 animate-pulse"></div>
+                            <div class="relative w-96 h-96 gradient-bg rounded-3xl rotate-45 shadow-2xl flex items-center justify-center">
+                                <i class="fa-solid fa-brain text-white text-9xl -rotate-45"></i>
+                            </div>
+                            
+                            <!-- Floating particles -->
+                            <div class="absolute -top-4 -right-4 w-4 h-4 bg-purple-500 rounded-full animate-ping"></div>
+                            <div class="absolute -bottom-4 -left-4 w-4 h-4 bg-blue-500 rounded-full animate-ping animation-delay-1000"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-24 bg-[#0f172a]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+            <span class="text-sm font-semibold tracking-wider text-purple-400 uppercase">Features</span>
+            <h2 class="text-4xl font-bold text-white mt-2 mb-4">Why Choose NeuroScan AI?</h2>
+            <p class="text-xl text-gray-400">State-of-the-art technology for accurate brain tumor analysis</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Feature 1 -->
+            <div class="group bg-[#1e293b] p-8 rounded-3xl border border-purple-500/20 hover:border-purple-500 hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300" data-aos="fade-up" data-aos-delay="100">
+                <div class="w-16 h-16 gradient-bg rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-brain text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">Multi-Class Detection</h3>
+                <p class="text-gray-400">Glioma, Meningioma, Pituitary tumors, and no-tumor</p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="group bg-[#1e293b] p-8 rounded-3xl border border-purple-500/20 hover:border-purple-500 hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300" data-aos="fade-up" data-aos-delay="200">
+                <div class="w-16 h-16 gradient-bg rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-location-dot text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">Tumor Localization</h3>
+                <p class="text-gray-400">YOLOv8-based detection with precise tumor region marking</p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="group bg-[#1e293b] p-8 rounded-3xl border border-purple-500/20 hover:border-purple-500 hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300" data-aos="fade-up" data-aos-delay="300">
+                <div class="w-16 h-16 gradient-bg rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-file-pdf text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">PDF Reports</h3>
+                <p class="text-gray-400">Download detailed reports with images and confidence scores</p>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="group bg-[#1e293b] p-8 rounded-3xl border border-purple-500/20 hover:border-purple-500 hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300" data-aos="fade-up" data-aos-delay="400">
+                <div class="w-16 h-16 gradient-bg rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-clock text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">24/7 Availability</h3>
+                <p class="text-gray-400">Always accessible, get results in under 5 seconds</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="py-24 bg-[#0f172a] border-t border-purple-500/20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+            <span class="text-sm font-semibold tracking-wider text-purple-400 uppercase">Process</span>
+            <h2 class="text-4xl font-bold text-white mt-2 mb-4">How It Works</h2>
+            <p class="text-xl text-gray-400">Three simple steps to get your MRI analyzed</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Step 1 -->
+            <div class="relative" data-aos="fade-up" data-aos-delay="100">
+                <div class="bg-[#1e293b] rounded-3xl p-8 border border-purple-500/20 text-center hover:border-purple-500 transition-all">
+                    <div class="w-16 h-16 gradient-bg rounded-2xl flex items-center justify-center text-white text-2xl font-bold mx-auto -mt-12 mb-6 shadow-lg">
+                        1
+                    </div>
+                    <div class="w-24 h-24 bg-purple-500/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fa-solid fa-cloud-arrow-up text-4xl text-purple-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Upload MRI</h3>
+                    <p class="text-gray-400">Upload your brain MRI scan in JPG, PNG, or JPEG format</p>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="relative" data-aos="fade-up" data-aos-delay="200">
+                <div class="bg-[#1e293b] rounded-3xl p-8 border border-purple-500/20 text-center hover:border-purple-500 transition-all">
+                    <div class="w-16 h-16 gradient-bg rounded-2xl flex items-center justify-center text-white text-2xl font-bold mx-auto -mt-12 mb-6 shadow-lg">
+                        2
+                    </div>
+                    <div class="w-24 h-24 bg-purple-500/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fa-solid fa-microchip text-4xl text-purple-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">AI Analysis</h3>
+                    <p class="text-gray-400">Deep learning models analyze and detect tumors instantly</p>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="relative" data-aos="fade-up" data-aos-delay="300">
+                <div class="bg-[#1e293b] rounded-3xl p-8 border border-purple-500/20 text-center hover:border-purple-500 transition-all">
+                    <div class="w-16 h-16 gradient-bg rounded-2xl flex items-center justify-center text-white text-2xl font-bold mx-auto -mt-12 mb-6 shadow-lg">
+                        3
+                    </div>
+                    <div class="w-24 h-24 bg-purple-500/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fa-solid fa-file-medical text-4xl text-purple-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Get Results</h3>
+                    <p class="text-gray-400">View detailed results with confidence scores and localization</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="gradient-bg py-20">
+    <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+        <h2 class="text-4xl font-bold text-white mb-6" data-aos="fade-up">
+            Ready to Get Started?
+        </h2>
+        <p class="text-xl text-purple-200 mb-10 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
+            Join healthcare professionals using AI for brain tumor detection
+        </p>
+        <div class="flex flex-wrap gap-4 justify-center" data-aos="fade-up" data-aos-delay="200">
+            <a href="{{ url_for('register') }}" 
+               class="bg-white text-purple-600 px-8 py-4 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                Create Free Account
+            </a>
+            <a href="{{ url_for('contact') }}" 
+               class="border-2 border-white text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white hover:text-purple-600 transition-all duration-300">
+                Contact Us
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

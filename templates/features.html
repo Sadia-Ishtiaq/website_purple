@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Features{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+
+    <!-- Header -->
+    <div class="text-center mb-16" data-aos="fade-down">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Powerful Features</h1>
+        <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+            Advanced AI-powered tools for accurate brain tumor detection and analysis
+        </p>
+    </div>
+
+    <!-- Main Features Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
+        <div class="bg-[#1e293b] rounded-2xl p-8 border border-purple-500/20 hover:border-purple-500 transition" data-aos="fade-right">
+            <div class="w-16 h-16 gradient-bg rounded-xl flex items-center justify-center text-white text-2xl mb-6">
+                <i class="fa-solid fa-brain"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-4">Multi-Class Classification</h3>
+            <p class="text-gray-400 leading-relaxed mb-4">
+                Our ResNet50 deep learning model classifies brain MRI scans into four categories:
+            </p>
+            <ul class="space-y-3">
+                <li class="flex items-center gap-3">
+                    <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    <span class="text-gray-300"><span class="font-semibold text-white">Glioma:</span> Common brain tumor type</span>
+                </li>
+                <li class="flex items-center gap-3">
+                    <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    <span class="text-gray-300"><span class="font-semibold text-white">Meningioma:</span> Usually benign tumors</span>
+                </li>
+                <li class="flex items-center gap-3">
+                    <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    <span class="text-gray-300"><span class="font-semibold text-white">Pituitary:</span> Affecting pituitary gland</span>
+                </li>
+                <li class="flex items-center gap-3">
+                    <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                    <span class="text-gray-300"><span class="font-semibold text-white">No Tumor:</span> Normal brain tissue</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="bg-[#1e293b] rounded-2xl p-8 border border-purple-500/20 hover:border-purple-500 transition" data-aos="fade-left">
+            <div class="w-16 h-16 gradient-bg rounded-xl flex items-center justify-center text-white text-2xl mb-6">
+                <i class="fa-solid fa-map-location-dot"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-4">YOLOv8 Tumor Localization</h3>
+            <p class="text-gray-400 leading-relaxed mb-4">
+                State-of-the-art object detection to precisely locate tumors:
+            </p>
+            <ul class="space-y-3">
+                <li class="flex items-center gap-3">
+                    <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    <span class="text-gray-300">Bounding boxes around detected tumors</span>
+                </li>
+                <li class="flex items-center gap-3">
+                    <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    <span class="text-gray-300">Confidence scores for each detection</span>
+                </li>
+                <li class="flex items-center gap-3">
+                    <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    <span class="text-gray-300">Multiple tumor detection in single scan</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="bg-[#1e293b] rounded-2xl p-8 border border-purple-500/20 hover:border-purple-500 transition" data-aos="fade-right" data-aos-delay="100">
+            <div class="w-16 h-16 gradient-bg rounded-xl flex items-center justify-center text-white text-2xl mb-6">
+                <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-4">Confidence Scoring</h3>
+            <p class="text-gray-400 leading-relaxed mb-4">
+                Each prediction comes with detailed confidence metrics:
+            </p>
+            <ul class="space-y-3">
+                <li class="flex items-center gap-3">
+                    <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    <span class="text-gray-300">Probability percentage for each class</span>
+                </li>
+                <li class="flex items-center gap-3">
+                    <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    <span class="text-gray-300">Multi-class probability distribution</span>
+                </li>
+                <li class="flex items-center gap-3">
+                    <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    <span class="text-gray-300">Threshold-based recommendations</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="bg-[#1e293b] rounded-2xl p-8 border border-purple-500/20 hover:border-purple-500 transition" data-aos="fade-left" data-aos-delay="100">
+            <div class="w-16 h-16 gradient-bg rounded-xl flex items-center justify-center text-white text-2xl mb-6">
+                <i class="fa-solid fa-file-pdf"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-4">Comprehensive Reports</h3>
+            <p class="text-gray-400 leading-relaxed mb-4">
+                Generate detailed PDF reports including:
+            </p>
+            <ul class="space-y-3">
+                <li class="flex items-center gap-3">
+                    <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    <span class="text-gray-300">Original MRI image</span>
+                </li>
+                <li class="flex items-center gap-3">
+                    <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    <span class="text-gray-300">YOLO localized tumor detection</span>
+                </li>
+                <li class="flex items-center gap-3">
+                    <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    <span class="text-gray-300">Diagnosis and confidence scores</span>
+                </li>
+                <li class="flex items-center gap-3">
+                    <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    <span class="text-gray-300">Patient information and timestamp</span>
+                </li>
+                <li class="flex items-center gap-3">
+                    <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    <span class="text-gray-300">Clinical recommendations</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Technical Specs -->
+    <div class="bg-[#1e293b] rounded-2xl p-8 border border-purple-500/20" data-aos="fade-up">
+        <h2 class="text-3xl font-bold text-white text-center mb-8">Technical Specifications</h2>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="text-center">
+                <p class="text-3xl font-bold text-purple-400 mb-2">ResNet50</p>
+                <p class="text-gray-400">Classification Model</p>
+            </div>
+            <div class="text-center">
+                <p class="text-3xl font-bold text-purple-400 mb-2">YOLOv8</p>
+                <p class="text-gray-400">Localization Model</p>
+            </div>
+            <div class="text-center">
+                <p class="text-3xl font-bold text-purple-400 mb-2">128x128</p>
+                <p class="text-gray-400">Input Size</p>
+            </div>
+            <div class="text-center">
+                <p class="text-3xl font-bold text-purple-400 mb-2">4 Classes</p>
+                <p class="text-gray-400">Classification Types</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

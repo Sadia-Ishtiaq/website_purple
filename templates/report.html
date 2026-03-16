@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Report - NeuroScan AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0f172a;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .report-container {
+            max-width: 1200px;
+            width: 100%;
+        }
+        
+        .report {
+            background: #1e293b;
+            border-radius: 24px;
+            padding: 40px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(139, 92, 246, 0.3);
+        }
+        
+        .logo {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+        }
+        
+        .header-text h1 {
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .header-text p {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+        
+        .info-grid {
+            background: #0f172a;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+        
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .info-label {
+            font-size: 12px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        
+        .info-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .result-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+        
+        .badge-tumor {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.5);
+        }
+        
+        .badge-normal {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.5);
+        }
+        
+        .images-section {
+            margin: 40px 0;
+        }
+        
+        .images-section h2 {
+            color: white;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+        
+        .image-card {
+            background: #0f172a;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+        
+        .image-card h3 {
+            color: #94a3b8;
+            font-size: 16px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        .image-card img {
+            width: 100%;
+            border-radius: 12px;
+            border: 3px solid #1e293b;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .info-section {
+            background: #0f172a;
+            border-radius: 16px;
+            padding: 24px;
+            margin: 30px 0;
+            border-left: 4px solid #8b5cf6;
+        }
+        
+        .info-section h3 {
+            color: white;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+        
+        .info-section p {
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+        
+        .recommendation-section {
+            background: #0f172a;
+            border-radius: 16px;
+            padding: 24px;
+            margin: 30px 0;
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .recommendation-section h3 {
+            color: white;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+        
+        .recommendation-section p {
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+        
+        .recommendation-section ul {
+            color: #94a3b8;
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .recommendation-section li {
+            margin-bottom: 8px;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(139, 92, 246, 0.3);
+            text-align: center;
+        }
+        
+        .footer p {
+            color: #64748b;
+            font-size: 12px;
+            margin: 5px 0;
+        }
+        
+        .download-btn {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.5);
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px rgba(139, 92, 246, 0.7);
+        }
+        
+        .disclaimer {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 30px;
+            color: #f59e0b;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .report {
+                padding: 20px;
+            }
+            .image-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="report-container">
+        <div class="report">
+            <div class="header">
+                <div class="logo">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="header-text">
+                    <h1>AI Brain Tumor Analysis Report</h1>
+                    <p>Generated by NeuroScan AI - Advanced Diagnostic System</p>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Report ID</span>
+                    <span class="info-value">{{ report_id }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Date & Time</span>
+                    <span class="info-value">{{ date }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Patient Name</span>
+                    <span class="info-value">{{ patient }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Analysis Method</span>
+                    <span class="info-value">ResNet50 + YOLOv8</span>
+                </div>
+            </div>
+
+            <div class="result-badge {% if label == 'No Tumor' %}badge-normal{% else %}badge-tumor{% endif %}">
+                <i class="fas {% if label == 'No Tumor' %}fa-check-circle{% else %}fa-exclamation-triangle{% endif %}"></i>
+                {{ label }} - {{ confidence }} Confidence
+            </div>
+
+            <div class="images-section">
+                <h2>Imaging Results</h2>
+                <div class="image-grid">
+                    <!-- Original MRI -->
+                    <div class="image-card">
+                        <h3>Original MRI Scan</h3>
+                        <img src="{{ url_for('uploaded_file', filename=image) }}" alt="Original MRI">
+                    </div>
+
+                    <!-- Localization Result -->
+                    {% if result_img %}
+                    <div class="image-card">
+                        <h3>Tumor Localization (YOLOv8)</h3>
+                        <img src="{{ url_for('result_file', filename=result_img) }}" alt="Localized">
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>Clinical Information - {{ label }}</h3>
+                <p>{{ detailed_info }}</p>
+            </div>
+
+            <div class="recommendation-section">
+                <h3>Clinical Summary</h3>
+                <p>{{ summary }}</p>
+            </div>
+
+            {% if recommendations %}
+            <div class="recommendation-section" style="border-left-color: #f59e0b;">
+                <h3>Recommendations</h3>
+                <p>{{ recommendations }}</p>
+                {% if label != 'No Tumor' %}
+                <ul>
+                    <li>Consult with a neurosurgeon within 1-2 weeks</li>
+                    <li>Bring this report and original MRI to your appointment</li>
+                    <li>Further imaging may be required for confirmation</li>
+                </ul>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <form method="POST" action="{{ url_for('download_report') }}" style="text-align: center;">
+                <input type="hidden" name="label" value="{{ label }}">
+                <input type="hidden" name="confidence" value="{{ confidence }}">
+                <input type="hidden" name="image" value="{{ image }}">
+                <input type="hidden" name="result_img" value="{{ result_img }}">
+                <button type="submit" class="download-btn">
+                    <i class="fas fa-download"></i>
+                    Download PDF Report
+                </button>
+            </form>
+
+            <div class="disclaimer">
+                <i class="fas fa-info-circle"></i>
+                This report is generated by AI and should be reviewed by a qualified healthcare professional. Not for diagnostic use without clinical correlation.
+            </div>
+
+            <div class="footer">
+                <p>© 2024 NeuroScan AI. All rights reserved.</p>
+                <p>Generated on {{ date }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</body>
+</html>

@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}About Us{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+
+    <!-- Hero Section -->
+    <div class="text-center mb-16" data-aos="fade-down">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">About NeuroScan AI</h1>
+        <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+            Revolutionizing brain tumor detection through artificial intelligence and deep learning
+        </p>
+    </div>
+
+    <!-- Mission Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20">
+        <div data-aos="fade-right">
+            <h2 class="text-3xl font-bold text-white mb-4">Our Mission</h2>
+            <p class="text-gray-400 leading-relaxed mb-4">
+                To provide accessible, accurate, and rapid brain tumor detection using cutting-edge
+                deep learning technology, assisting healthcare professionals in early diagnosis and
+                improving patient outcomes worldwide.
+            </p>
+            <p class="text-gray-400 leading-relaxed">
+                Our system can detect and classify four types: Glioma, Meningioma, Pituitary tumors,
+                and normal brain tissue with high accuracy using ResNet50 architecture.
+            </p>
+        </div>
+        <div class="gradient-bg rounded-2xl p-8 text-white" data-aos="fade-left">
+            <i class="fa-solid fa-quote-right text-6xl opacity-50 mb-4"></i>
+            <p class="text-xl italic">
+                "Early detection is the key to successful treatment. Our AI system aims to make this
+                accessible to everyone, everywhere."
+            </p>
+        </div>
+    </div>
+
+    <!-- Technology Stack -->
+    <div class="bg-[#1e293b] rounded-2xl p-8 mb-20 border border-purple-500/20" data-aos="fade-up">
+        <h2 class="text-3xl font-bold text-white text-center mb-8">Technology Stack</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="text-center">
+                <i class="fa-brands fa-python text-4xl text-blue-400 mb-2"></i>
+                <p class="font-semibold text-white">Python</p>
+                <p class="text-sm text-gray-400">Backend & AI</p>
+            </div>
+            <div class="text-center">
+                <i class="fa-solid fa-brain text-4xl text-purple-400 mb-2"></i>
+                <p class="font-semibold text-white">TensorFlow</p>
+                <p class="text-sm text-gray-400">ResNet50 Model</p>
+            </div>
+            <div class="text-center">
+                <i class="fa-solid fa-eye text-4xl text-green-400 mb-2"></i>
+                <p class="font-semibold text-white">YOLOv8</p>
+                <p class="text-sm text-gray-400">Tumor Localization</p>
+            </div>
+            <div class="text-center">
+                <i class="fa-brands fa-flask text-4xl text-orange-400 mb-2"></i>
+                <p class="font-semibold text-white">Flask</p>
+                <p class="text-sm text-gray-400">Web Framework</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Team Section - Updated with your names -->
+    <div>
+        <h2 class="text-3xl font-bold text-white text-center mb-12" data-aos="fade-up">Our Team</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-[#1e293b] rounded-2xl p-8 text-center border border-purple-500/20 hover:border-purple-500 transition" data-aos="fade-up" data-aos-delay="100">
+                <div class="w-32 h-32 gradient-bg rounded-full mx-auto mb-4 flex items-center justify-center text-white text-4xl">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-white">Sadia</h3>
+                <p class="text-purple-400 mb-2">Team Lead</p>
+            </div>
+            <div class="bg-[#1e293b] rounded-2xl p-8 text-center border border-purple-500/20 hover:border-purple-500 transition" data-aos="fade-up" data-aos-delay="200">
+                <div class="w-32 h-32 gradient-bg rounded-full mx-auto mb-4 flex items-center justify-center text-white text-4xl">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-white">Vaneeza</h3>
+                <p class="text-purple-400 mb-2">Team Member</p>
+            </div>
+            <div class="bg-[#1e293b] rounded-2xl p-8 text-center border border-purple-500/20 hover:border-purple-500 transition" data-aos="fade-up" data-aos-delay="300">
+                <div class="w-32 h-32 gradient-bg rounded-full mx-auto mb-4 flex items-center justify-center text-white text-4xl">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-white">Hafsa</h3>
+                <p class="text-purple-400 mb-2">Team Member</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

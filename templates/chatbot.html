@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block title %}AI Chatbot Assistant{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Chatbot Section -->
+        <div class="lg:col-span-2">
+            <div class="bg-[#1e293b] rounded-2xl border border-purple-500/20 overflow-hidden">
+                <div class="gradient-bg px-6 py-4">
+                    <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-robot"></i>
+                        NeuroScan AI Assistant
+                    </h2>
+                    <p class="text-purple-100 text-sm">Ask me about brain tumors and MRI results</p>
+                </div>
+                
+                <!-- Chat Messages -->
+                <div id="chat-messages" class="h-96 overflow-y-auto p-6 space-y-4 bg-[#0f172a]">
+                    <!-- Welcome Message -->
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 gradient-bg rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-robot text-white text-sm"></i>
+                        </div>
+                        <div class="bg-[#1e293b] rounded-2xl rounded-tl-none p-4 max-w-[80%]">
+                            <p class="text-gray-300">Hello! I'm your NeuroScan AI assistant. I can help you understand:</p>
+                            <ul class="text-gray-400 text-sm mt-2 list-disc list-inside">
+                                <li>Different types of brain tumors (Glioma, Meningioma, Pituitary)</li>
+                                <li>How to interpret MRI results</li>
+                                <li>Confidence scores and what they mean</li>
+                                <li>Next steps after detection</li>
+                            </ul>
+                            <p class="text-gray-400 text-sm mt-2">How can I assist you today?</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chat Input -->
+                <div class="p-4 border-t border-purple-500/20 bg-[#1e293b]">
+                    <form id="chat-form" class="flex gap-2">
+                        <input type="text" id="user-input" 
+                            class="flex-1 px-4 py-3 bg-[#0f172a] border border-purple-500/30 rounded-lg text-white focus:outline-none focus:border-purple-500"
+                            placeholder="Type your question here..." required>
+                        <button type="submit" 
+                            class="gradient-bg text-white px-6 py-3 rounded-lg hover:shadow-lg transition">
+                            <i class="fa-regular fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Questions Panel -->
+        <div class="lg:col-span-1">
+            <div class="bg-[#1e293b] rounded-2xl border border-purple-500/20 p-6">
+                <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-bolt text-purple-400"></i>
+                    Quick Questions
+                </h3>
+                <div class="space-y-3">
+                    <button onclick="askQuickQuestion('What is Glioma?')" 
+                        class="w-full text-left p-3 bg-[#0f172a] rounded-xl text-gray-300 hover:bg-purple-600 hover:text-white transition">
+                        What is Glioma?
+                    </button>
+                    <button onclick="askQuickQuestion('What is Meningioma?')" 
+                        class="w-full text-left p-3 bg-[#0f172a] rounded-xl text-gray-300 hover:bg-purple-600 hover:text-white transition">
+                        What is Meningioma?
+                    </button>
+                    <button onclick="askQuickQuestion('What is Pituitary tumor?')" 
+                        class="w-full text-left p-3 bg-[#0f172a] rounded-xl text-gray-300 hover:bg-purple-600 hover:text-white transition">
+                        What is Pituitary tumor?
+                    </button>
+                    <button onclick="askQuickQuestion('How to read MRI results?')" 
+                        class="w-full text-left p-3 bg-[#0f172a] rounded-xl text-gray-300 hover:bg-purple-600 hover:text-white transition">
+                        How to read MRI results?
+                    </button>
+                    <button onclick="askQuickQuestion('What does confidence score mean?')" 
+                        class="w-full text-left p-3 bg-[#0f172a] rounded-xl text-gray-300 hover:bg-purple-600 hover:text-white transition">
+                        What does confidence score mean?
+                    </button>
+                    <button onclick="askQuickQuestion('Next steps after tumor detection?')" 
+                        class="w-full text-left p-3 bg-[#0f172a] rounded-xl text-gray-300 hover:bg-purple-600 hover:text-white transition">
+                        Next steps after detection?
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const chatMessages = document.getElementById('chat-messages');
+    const chatForm = document.getElementById('chat-form');
+    const userInput = document.getElementById('user-input');
+
+    function addMessage(message, isUser = false) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `flex items-start gap-3 ${isUser ? 'justify-end' : ''}`;
+        
+        if (!isUser) {
+            messageDiv.innerHTML = `
+                <div class="w-8 h-8 gradient-bg rounded-full flex items-center justify-center flex-shrink-0">
+                    <i class="fa-solid fa-robot text-white text-sm"></i>
+                </div>
+                <div class="bg-[#1e293b] rounded-2xl rounded-tl-none p-4 max-w-[80%]">
+                    <p class="text-gray-300">${message.replace(/\n/g, '<br>')}</p>
+                </div>
+            `;
+        } else {
+            messageDiv.innerHTML = `
+                <div class="bg-purple-600 rounded-2xl rounded-tr-none p-4 max-w-[80%]">
+                    <p class="text-white">${message}</p>
+                </div>
+                <div class="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <i class="fa-solid fa-user text-white text-sm"></i>
+                </div>
+            `;
+        }
+        
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function askQuickQuestion(question) {
+        userInput.value = question;
+        chatForm.dispatchEvent(new Event('submit'));
+    }
+
+    chatForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const question = userInput.value.trim();
+        if (!question) return;
+
+        // Add user message
+        addMessage(question, true);
+        userInput.value = '';
+
+        // Show typing indicator
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'flex items-start gap-3';
+        typingDiv.id = 'typing-indicator';
+        typingDiv.innerHTML = `
+            <div class="w-8 h-8 gradient-bg rounded-full flex items-center justify-center flex-shrink-0">
+                <i class="fa-solid fa-robot text-white text-sm"></i>
+            </div>
+            <div class="bg-[#1e293b] rounded-2xl rounded-tl-none p-4">
+                <div class="flex gap-1">
+                    <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0s"></span>
+                    <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
+                    <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.4s"></span>
+                </div>
+            </div>
+        `;
+        chatMessages.appendChild(typingDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        // Get response from server
+        try {
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: question })
+            });
+            
+            const data = await response.json();
+            
+            // Remove typing indicator
+            document.getElementById('typing-indicator')?.remove();
+            
+            // Add bot response
+            addMessage(data.response);
+        } catch (error) {
+            document.getElementById('typing-indicator')?.remove();
+            addMessage('Sorry, I encountered an error. Please try again.');
+        }
+    });
+</script>
+{% endblock %}
