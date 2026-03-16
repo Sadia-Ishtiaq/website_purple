@@ -70,10 +70,10 @@ CLASSES = ["Glioma", "Meningioma", "No Tumor", "Pituitary"]
 
 # Tumor information dictionary for reports
 TUMOR_INFO = {
-    "Glioma": "Glioma is a type of tumor that occurs in the brain and spinal cord. Gliomas begin in the gluey supportive cells (glial cells) that surround nerve cells and help them function.",
-    "Meningioma": "Meningioma is a tumor that arises from the meninges — the membranes that surround your brain and spinal cord. Most meningiomas are noncancerous (benign).",
-    "Pituitary": "Pituitary tumors are abnormal growths that develop in your pituitary gland. Most pituitary tumors are noncancerous (benign) growths that remain in the pituitary gland.",
-    "No Tumor": "No tumor detected. The brain structure appears normal with no abnormal growths or masses visible in the MRI scan."
+    "Glioma": "Glioma is a type of tumor that occurs in the brain and spinal cord...",
+    "Meningioma": "Meningioma is a tumor that arises from the meninges — the membranes...",
+    "Pituitary": "Pituitary tumors are abnormal growths that develop in your pituitary gland...",
+    "No Tumor": "No tumor detected. The brain structure appears normal..."
 }
 
 # ---------------- LOGIN REQUIRED ---------------- #
@@ -123,20 +123,11 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def detect_tumor_with_yolo(image_path):
-    """YOLO detection with proper output handling - NO HEATMAP FALLBACK"""
     if yolo_model is None:
         print("⚠️ YOLO model not available, skipping localization")
         return None
     
     try:
-        print(f"🔍 Processing image with YOLO: {image_path}")
-        
-        # Get original filename info
-        img_name = os.path.basename(image_path)
-        img_name_without_ext = os.path.splitext(img_name)[0]
-        img_ext = os.path.splitext(img_name)[1]
-        
-        # Run YOLO prediction
         results = yolo_model.predict(
             source=image_path,
             conf=0.25,
@@ -146,72 +137,23 @@ def detect_tumor_with_yolo(image_path):
             exist_ok=True,
             verbose=False
         )
-        
-        # Wait a moment for file to be written
-        time.sleep(1.5)
-        
-        # Get the actual output directory from YOLO
+        time.sleep(1)
         if results and len(results) > 0:
             output_dir = results[0].save_dir
-            print(f"📁 YOLO output directory: {output_dir}")
-            
-            # Check for the most common YOLO output patterns
-            possible_filenames = [
-                img_name,
-                f"{img_name_without_ext}{img_ext}",
-                f"{img_name_without_ext}.jpg",
-                f"{img_name_without_ext}.jpeg",
-                f"{img_name_without_ext}.png",
-                "image0.jpg",
-                f"image0{img_ext}",
-            ]
-            
-            # Also check for the image path from results
-            if hasattr(results[0], 'path') and results[0].path:
-                yolo_saved_path = results[0].path
-                if os.path.exists(yolo_saved_path):
-                    possible_filenames.append(os.path.basename(yolo_saved_path))
-            
-            # Search for the file in output directory
-            found_file = None
-            for filename in possible_filenames:
-                potential_path = os.path.join(output_dir, filename)
-                if os.path.exists(potential_path):
-                    found_file = potential_path
-                    print(f"✅ Found YOLO output: {potential_path}")
-                    break
-            
-            # If not found, search recursively
-            if not found_file and os.path.exists(output_dir):
-                for root, dirs, files in os.walk(output_dir):
-                    for file in files:
-                        if file.endswith(('.jpg', '.jpeg', '.png')):
-                            found_file = os.path.join(root, file)
-                            print(f"✅ Found YOLO output via search: {found_file}")
-                            break
-                    if found_file:
-                        break
-            
-            # If we found the file, copy it to results folder
-            if found_file and os.path.exists(found_file):
-                result_filename = f"localized_{int(time.time())}_{img_name}"
-                dest_path = os.path.join(app.config["RESULT_FOLDER"], result_filename)
-                shutil.copy2(found_file, dest_path)
-                print(f"✅ YOLO localization successful: {result_filename}")
-                return result_filename
-            else:
-                print("⚠️ YOLO output file not found")
-                return None
-        else:
-            print("⚠️ No YOLO results returned")
-            return None
-            
+            # Take first jpg/png in dir
+            for file in os.listdir(output_dir):
+                if file.endswith(('.jpg','.png','.jpeg')):
+                    src = os.path.join(output_dir, file)
+                    dst_name = f"localized_{int(time.time())}_{file}"
+                    dst = os.path.join(RESULT_FOLDER, dst_name)
+                    shutil.copy2(src, dst)
+                    return dst_name
+        return None
     except Exception as e:
-        print(f"❌ YOLO detection error: {str(e)}")
+        print(f"❌ YOLO detection error: {e}")
         return None
 
 def save_scan(user_id, filename, result_filename, result, confidence, processing_time):
-    """Save scan record to database"""
     conn = sqlite3.connect("database.db")
     c = conn.cursor()
     c.execute(
@@ -226,7 +168,6 @@ def save_scan(user_id, filename, result_filename, result, confidence, processing
     return scan_id
 
 def get_user_scans(user_id, limit=None):
-    """Get scans for a user"""
     conn = sqlite3.connect("database.db")
     c = conn.cursor()
     if limit:
@@ -244,529 +185,174 @@ def get_user_scans(user_id, limit=None):
     return scans
 
 def get_scan_stats(user_id):
-    """Get scan statistics for user"""
     conn = sqlite3.connect("database.db")
     c = conn.cursor()
-    
-    # Total scans
     c.execute("SELECT COUNT(*) FROM scans WHERE user_id = ?", (user_id,))
     total = c.fetchone()[0]
-    
-    # Detected tumors
     c.execute("SELECT COUNT(*) FROM scans WHERE user_id = ? AND result != 'No Tumor'", (user_id,))
     detected = c.fetchone()[0]
-    
-    # By type
     stats = {}
     for cls in CLASSES:
         c.execute("SELECT COUNT(*) FROM scans WHERE user_id = ? AND result = ?", (user_id, cls))
         stats[cls] = c.fetchone()[0]
-    
     conn.close()
-    return total, detected, total - detected, stats
+    return total, detected, total-detected, stats
 
 # ---------------- AUTH ROUTES ---------------- #
-@app.route("/register", methods=["GET", "POST"])
+@app.route("/register", methods=["GET","POST"])
 def register():
     if "user_id" in session:
-        return redirect(url_for('dashboard'))
-    
-    if request.method == "POST":
+        return redirect(url_for("dashboard"))
+    if request.method=="POST":
         name = request.form.get("name")
         email = request.form.get("email")
         password = request.form.get("password")
-        confirm_password = request.form.get("confirm_password")
-        
-        if not all([name, email, password, confirm_password]):
-            flash("All fields are required", "error")
-            return redirect(url_for('register'))
-        
-        if password != confirm_password:
-            flash("Passwords do not match", "error")
-            return redirect(url_for('register'))
-        
+        confirm = request.form.get("confirm_password")
+        if not all([name,email,password,confirm]):
+            flash("All fields are required","error")
+            return redirect(url_for("register"))
+        if password != confirm:
+            flash("Passwords do not match","error")
+            return redirect(url_for("register"))
         conn = sqlite3.connect("database.db")
         c = conn.cursor()
         try:
-            c.execute(
-                "INSERT INTO users (name, email, password) VALUES (?,?,?)",
-                (name, email, generate_password_hash(password))
-            )
+            c.execute("INSERT INTO users (name,email,password) VALUES (?,?,?)",
+                      (name,email,generate_password_hash(password)))
             conn.commit()
-            flash("Registration successful! Please login.", "success")
-            return redirect(url_for('login'))
+            flash("Registration successful! Please login.","success")
+            return redirect(url_for("login"))
         except sqlite3.IntegrityError:
-            flash("Email already exists", "error")
+            flash("Email already exists","error")
         finally:
             conn.close()
-    
     return render_template("register.html")
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/login", methods=["GET","POST"])
 def login():
     if "user_id" in session:
-        return redirect(url_for('dashboard'))
-    
-    if request.method == "POST":
+        return redirect(url_for("dashboard"))
+    if request.method=="POST":
         email = request.form.get("email")
         password = request.form.get("password")
-        
         conn = sqlite3.connect("database.db")
         c = conn.cursor()
-        c.execute("SELECT * FROM users WHERE email=?", (email,))
-        user = c.fetchone()
+        c.execute("SELECT * FROM users WHERE email=?",(email,))
+        user=c.fetchone()
         conn.close()
-        
-        if user and check_password_hash(user[3], password):
-            session["user_id"] = user[0]
-            session["user_name"] = user[1]
-            session["user_email"] = user[2]
-            flash(f"Welcome back, {user[1]}!", "success")
-            return redirect(url_for('dashboard'))
+        if user and check_password_hash(user[3],password):
+            session["user_id"]=user[0]
+            session["user_name"]=user[1]
+            session["user_email"]=user[2]
+            flash(f"Welcome back, {user[1]}!","success")
+            return redirect(url_for("dashboard"))
         else:
-            flash("Invalid email or password", "error")
-    
+            flash("Invalid email or password","error")
     return render_template("login.html")
 
 @app.route("/logout")
 def logout():
     session.clear()
-    flash("You have been logged out", "success")
-    return redirect(url_for('login'))
+    flash("You have been logged out","success")
+    return redirect(url_for("login"))
 
 # ---------------- MAIN ROUTES ---------------- #
 @app.route("/")
 def index():
     if "user_id" in session:
-        return redirect(url_for('dashboard'))
+        return redirect(url_for("dashboard"))
     return render_template("index.html")
 
 @app.route("/about")
 def about():
     return render_template("about.html")
 
-@app.route("/contact", methods=["GET", "POST"])
+@app.route("/contact", methods=["GET","POST"])
 def contact():
-    if request.method == "POST":
-        flash("Thank you for your message! We'll respond within 24 hours.", "success")
-        return redirect(url_for('contact'))
+    if request.method=="POST":
+        flash("Thank you for your message! We'll respond within 24 hours.","success")
+        return redirect(url_for("contact"))
     return render_template("contact.html")
 
 @app.route("/features")
 def features():
     return render_template("features.html")
 
-# ---------------- CHATBOT ROUTE ---------------- #
-@app.route("/chatbot")
-@login_required
-def chatbot():
-    """Render chatbot page"""
-    return render_template("chatbot.html")
-
-@app.route("/chat", methods=["POST"])
-@login_required
-def chat():
-    """Handle chat messages with rule-based responses"""
-    data = request.get_json()
-    user_message = data.get('message', '').lower()
-    
-    # Rule-based responses for common queries
-    responses = {
-        'glioma': {
-            'keywords': ['glioma', 'what is glioma', 'tell me about glioma', 'glioma tumor'],
-            'response': "🧠 **Glioma** is a type of tumor that starts in the glial cells of the brain or spine. It's the most common type of primary brain tumor. Symptoms may include headaches, seizures, and cognitive changes. Treatment depends on the grade and location. Would you like to know more about treatment options?"
-        },
-        'meningioma': {
-            'keywords': ['meningioma', 'what is meningioma', 'tell me about meningioma'],
-            'response': "🧠 **Meningioma** is a tumor that arises from the meninges - the membranes that surround your brain and spinal cord. Most meningiomas are benign (non-cancerous) and grow slowly. They're more common in women and often found incidentally during scans for other conditions."
-        },
-        'pituitary': {
-            'keywords': ['pituitary', 'pituitary tumor', 'pituitary gland'],
-            'response': "🧠 **Pituitary tumors** are abnormal growths in the pituitary gland at the base of the brain. Most are benign and slow-growing. They can affect hormone production, causing various symptoms like headaches, vision problems, fatigue, or hormonal imbalances. Treatment may include medication, surgery, or monitoring."
-        },
-        'no tumor': {
-            'keywords': ['no tumor', 'normal', 'healthy', 'negative'],
-            'response': "✅ **No tumor detected** means your MRI scan appears normal with no abnormal growths or masses. This is a good result! Continue with regular checkups as recommended by your doctor. Remember that this AI tool is for assistance only - always consult with your healthcare provider."
-        },
-        'confidence': {
-            'keywords': ['confidence', 'confidence score', 'how confident', 'percentage', 'accuracy'],
-            'response': "📊 **Confidence score** shows how certain the AI model is about its prediction. Higher scores (above 90%) indicate high reliability. Lower scores (below 70%) suggest the result should be reviewed by a specialist. Our model achieves 90% overall accuracy on test datasets."
-        },
-        'mri': {
-            'keywords': ['mri', 'scan', 'mri scan', 'magnetic resonance', 'read mri', 'interpret'],
-            'response': "🖼️ **About MRI Scans:** MRI (Magnetic Resonance Imaging) uses strong magnetic fields to create detailed images of the brain. Our AI analyzes these images to detect tumors by looking for abnormal tissue growth, shape, density, and contrast patterns. The system classifies findings into four categories: Glioma, Meningioma, Pituitary tumor, or No tumor."
-        },
-        'next steps': {
-            'keywords': ['next steps', 'what to do', 'after detection', 'what now', 'follow up'],
-            'response': "🩺 **Next steps after detection:**\n\n1️⃣ Consult with a neurosurgeon or radiologist immediately\n2️⃣ Bring your MRI report and images to the appointment\n3️⃣ Further imaging (contrast MRI, CT) may be needed\n4️⃣ Discuss biopsy if recommended\n5️⃣ Treatment options depend on tumor type, size, and location\n\nRemember: Early detection improves outcomes!"
-        },
-        'symptoms': {
-            'keywords': ['symptom', 'signs', 'feel', 'headache', 'seizure'],
-            'response': "⚠️ **Common brain tumor symptoms may include:**\n• Persistent headaches (especially morning)\n• Seizures\n• Vision problems (blurred vision, double vision)\n• Nausea/vomiting\n• Memory or concentration issues\n• Mood or personality changes\n• Weakness on one side of body\n\nNote: These symptoms can also be caused by other conditions. Always consult a doctor for proper evaluation."
-        },
-        'treatment': {
-            'keywords': ['treatment', 'therapy', 'cure', 'surgery', 'radiation', 'chemotherapy'],
-            'response': "💊 **Treatment options** depend on tumor type, size, location, and grade:\n\n• **Surgery** - Removal of tumor (craniotomy)\n• **Radiation therapy** - High-energy beams to kill tumor cells\n• **Chemotherapy** - Drugs to stop tumor growth\n• **Targeted therapy** - Drugs that target specific tumor features\n• **Active surveillance** - Monitoring slow-growing benign tumors\n\nYour neurosurgeon/oncologist will recommend the best approach based on your specific case."
-        },
-        'accuracy': {
-            'keywords': ['accuracy', 'how accurate', 'reliable', 'trust'],
-            'response': "🎯 **Model Accuracy:** Our ResNet50 model achieves **90% accuracy** on test datasets. Each prediction comes with a confidence score showing reliability for that specific scan. The model was trained on thousands of MRI scans and validated by medical professionals. However, this is a decision-support tool - always confirm with a specialist."
-        },
-        'hello': {
-            'keywords': ['hello', 'hi', 'hey', 'greetings', 'good morning', 'good afternoon'],
-            'response': "👋 Hello! I'm your NeuroScan AI assistant. I can help you understand brain tumors, MRI results, confidence scores, and next steps. Feel free to ask me anything about:\n\n• Different tumor types (Glioma, Meningioma, Pituitary)\n• How to interpret your MRI report\n• What confidence scores mean\n• Recommended next steps\n\nHow can I assist you today?"
-        },
-        'thanks': {
-            'keywords': ['thanks', 'thank you', 'appreciate', 'thank'],
-            'response': "😊 You're welcome! If you have more questions about brain tumors or MRI results, feel free to ask. I'm here to help! Remember to always consult with healthcare professionals for medical advice."
-        },
-        'help': {
-            'keywords': ['help', 'what can you do', 'capabilities', 'features'],
-            'response': "🤖 **I can help you with:**\n\n• Explaining brain tumor types (Glioma, Meningioma, Pituitary)\n• Understanding MRI scan results\n• Interpreting confidence scores\n• Next steps after tumor detection\n• Common symptoms and treatment options\n• General information about brain health\n\nJust ask me a question and I'll do my best to help!"
-        }
-    }
-    
-    # Default response if no keywords match
-    default_response = "I'm not sure about that. Could you please ask about brain tumors, MRI results, confidence scores, or treatment options? For medical emergencies, please consult a doctor immediately. You can try asking:\n\n• What is Glioma?\n• How to read MRI results?\n• What does confidence score mean?\n• Next steps after detection?"
-    
-    # Find matching response
-    response_text = default_response
-    
-    for key, data in responses.items():
-        for keyword in data['keywords']:
-            if keyword in user_message:
-                response_text = data['response']
-                break
-        if response_text != default_response:
-            break
-    
-    return jsonify({'response': response_text})
-
-# ---------------- DASHBOARD ROUTES ---------------- #
+# ---------------- DASHBOARD & HISTORY ---------------- #
 @app.route("/dashboard")
 @login_required
 def dashboard():
     user_id = session["user_id"]
     total, detected, healthy, stats = get_scan_stats(user_id)
-    recent_scans = get_user_scans(user_id, limit=5)
-    
-    return render_template(
-        "dashboard.html",
-        user_name=session["user_name"],
-        total_scans=total,
-        detected=detected,
-        healthy=healthy,
-        stats=stats,
-        recent_scans=recent_scans,
-        classes=CLASSES
-    )
+    recent_scans = get_user_scans(user_id,limit=5)
+    return render_template("dashboard.html",user_name=session["user_name"],
+                           total_scans=total,detected=detected,healthy=healthy,
+                           stats=stats,recent_scans=recent_scans,classes=CLASSES)
 
 @app.route("/history")
 @login_required
 def history():
-    user_id = session["user_id"]
-    scans = get_user_scans(user_id)
-    return render_template("history.html", scans=scans, classes=CLASSES)
+    user_id=session["user_id"]
+    scans=get_user_scans(user_id)
+    return render_template("history.html",scans=scans,classes=CLASSES)
 
-@app.route("/delete_scan/<int:scan_id>", methods=["POST"])
-@login_required
-def delete_scan(scan_id):
-    user_id = session["user_id"]
-    
-    conn = sqlite3.connect("database.db")
-    c = conn.cursor()
-    
-    # Get scan info first
-    c.execute("SELECT filename, result_filename FROM scans WHERE id = ? AND user_id = ?", (scan_id, user_id))
-    scan = c.fetchone()
-    
-    if scan:
-        # Delete files
-        try:
-            filepath = os.path.join(UPLOAD_FOLDER, scan[0])
-            if os.path.exists(filepath):
-                os.remove(filepath)
-            
-            if scan[1]:
-                result_path = os.path.join(RESULT_FOLDER, scan[1])
-                if os.path.exists(result_path):
-                    os.remove(result_path)
-        except Exception as e:
-            print(f"Error deleting files: {e}")
-        
-        # Delete from database
-        c.execute("DELETE FROM scans WHERE id = ? AND user_id = ?", (scan_id, user_id))
-        conn.commit()
-        flash("Scan deleted successfully", "success")
-    else:
-        flash("Scan not found", "error")
-    
-    conn.close()
-    return redirect(url_for('history'))
-
-# ---------------- PREDICTION ROUTES ---------------- #
-@app.route("/predict", methods=["POST"])
+# ---------------- PREDICTION ---------------- #
+@app.route("/predict",methods=["POST"])
 @login_required
 def predict():
-    start_time = time.time()
-    
+    start_time=time.time()
     if 'file' not in request.files:
-        flash("No file selected", "error")
-        return redirect(url_for('dashboard'))
-    
-    file = request.files['file']
-    
-    if file.filename == '':
-        flash("No file selected", "error")
-        return redirect(url_for('dashboard'))
-    
+        flash("No file selected","error")
+        return redirect(url_for("dashboard"))
+    file=request.files['file']
+    if file.filename=='':
+        flash("No file selected","error")
+        return redirect(url_for("dashboard"))
     if not allowed_file(file.filename):
-        flash("File type not allowed. Please upload JPG, PNG, or JPEG files.", "error")
-        return redirect(url_for('dashboard'))
-    
-    # Save file
-    filename = secure_filename(file.filename)
-    unique_filename = f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{filename}"
-    filepath = os.path.join(app.config["UPLOAD_FOLDER"], unique_filename)
+        flash("File type not allowed","error")
+        return redirect(url_for("dashboard"))
+    filename=secure_filename(file.filename)
+    unique_filename=f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{filename}"
+    filepath=os.path.join(UPLOAD_FOLDER,unique_filename)
     file.save(filepath)
-    
-    # Predict with ResNet50
-    try:
-        if model:
-            img = load_img(filepath, target_size=(128, 128))
-            arr = np.expand_dims(img_to_array(img) / 255.0, axis=0)
-            preds = model.predict(arr, verbose=0)
-            idx = np.argmax(preds[0])
-            label = CLASSES[idx]
-            confidence = float(preds[0][idx])
-        else:
-            # Mock prediction for testing
-            idx = random.randint(0, 3)
-            label = CLASSES[idx]
-            confidence = random.uniform(0.75, 0.99)
-        
-        # Localization for tumors (ONLY YOLO, no heatmap)
-        result_filename = None
-        if label != "No Tumor":
-            print(f"🔴 Tumor detected ({label}), running YOLO localization...")
-            result_filename = detect_tumor_with_yolo(filepath)
-        else:
-            print("🟢 No tumor detected, skipping localization")
-        
-        # Calculate processing time
-        processing_time = time.time() - start_time
-        
-        # Save to database
-        user_id = session["user_id"]
-        scan_id = save_scan(
-            user_id, 
-            unique_filename, 
-            result_filename, 
-            label, 
-            confidence,
-            processing_time
-        )
-        
-        return render_template(
-            "result.html",
-            uploaded_img=unique_filename,
-            result_img=result_filename,
-            label=label,
-            confidence=f"{confidence*100:.2f}%",
-            scan_id=scan_id,
-            processing_time=f"{processing_time:.2f}"
-        )
-        
-    except Exception as e:
-        flash(f"Error during prediction: {str(e)}", "error")
-        return redirect(url_for('dashboard'))
-
-# ---------------- REPORT ROUTES ---------------- #
-@app.route("/report_preview", methods=["POST"])
-@login_required
-def report_preview():
-    label = request.form["label"]
-    confidence = request.form["confidence"]
-    image = request.form["image"]
-    result_img = request.form.get("result_img")
-    
-    # Get tumor information
-    tumor_info = TUMOR_INFO.get(label, "Analysis completed successfully.")
-    
-    if label == "No Tumor":
-        summary = "✓ No tumor detected in the MRI scan. The brain structure appears normal."
-        recommendations = "Regular checkups recommended as per standard medical guidelines."
-        detailed_info = tumor_info
+    # ResNet prediction
+    if model:
+        img=load_img(filepath,target_size=(128,128))
+        arr=np.expand_dims(img_to_array(img)/255.0,axis=0)
+        preds=model.predict(arr,verbose=0)
+        idx=np.argmax(preds[0])
+        label=CLASSES[idx]
+        confidence=float(preds[0][idx])
     else:
-        summary = f"⚠️ AI analysis detected a {label} tumor with {confidence} confidence."
-        recommendations = "Please consult with a neurosurgeon or radiologist for confirmation and treatment planning."
-        detailed_info = tumor_info
-    
-    return render_template(
-        "report.html",
-        patient=session.get("user_name"),
-        label=label,
-        confidence=confidence,
-        image=image,
-        result_img=result_img,
-        summary=summary,
-        recommendations=recommendations,
-        detailed_info=detailed_info,
-        date=datetime.now().strftime("%d %B %Y at %H:%M"),
-        report_id=f"RPT-{datetime.now().strftime('%Y%m%d%H%M%S')}"
-    )
-
-@app.route("/download_report", methods=["POST"])
-@login_required
-def download_report():
-    label = request.form["label"]
-    confidence = request.form["confidence"]
-    image = request.form["image"]
-    result_img = request.form.get("result_img")
-    
-    pdf_name = f"NeuroScan_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
-    pdf_path = os.path.join(app.config["UPLOAD_FOLDER"], pdf_name)
-    
-    styles = getSampleStyleSheet()
-    doc = SimpleDocTemplate(pdf_path, pagesize=A4)
-    story = []
-    
-    # Title
-    title_style = ParagraphStyle(
-        'CustomTitle',
-        parent=styles['Title'],
-        fontSize=24,
-        textColor=colors.HexColor('#8b5cf6'),
-        spaceAfter=30,
-        alignment=1
-    )
-    story.append(Paragraph("NeuroScan AI Medical Report", title_style))
-    
-    # Report ID and Date
-    info_style = ParagraphStyle(
-        'InfoStyle',
-        parent=styles['Normal'],
-        fontSize=10,
-        textColor=colors.gray
-    )
-    story.append(Paragraph(f"Report ID: RPT-{datetime.now().strftime('%Y%m%d%H%M%S')}", info_style))
-    story.append(Paragraph(f"Date: {datetime.now().strftime('%d %B %Y at %H:%M')}", info_style))
-    story.append(Spacer(1, 20))
-    
-    # Patient Info
-    story.append(Paragraph("Patient Information", styles['Heading2']))
-    story.append(Paragraph(f"Name: {session.get('user_name')}", styles['Normal']))
-    story.append(Spacer(1, 20))
-    
-    # Results
-    story.append(Paragraph("Analysis Results", styles['Heading2']))
-    result_style = ParagraphStyle(
-        'ResultStyle',
-        parent=styles['Normal'],
-        fontSize=14,
-        textColor=colors.HexColor('#ef4444') if label != "No Tumor" else colors.HexColor('#10b981'),
-        spaceAfter=10
-    )
-    story.append(Paragraph(f"Diagnosis: {label}", result_style))
-    story.append(Paragraph(f"Confidence: {confidence}", styles['Normal']))
-    story.append(Spacer(1, 20))
-    
-    # Tumor Information
-    story.append(Paragraph("Clinical Information", styles['Heading3']))
-    tumor_info = TUMOR_INFO.get(label, "Analysis completed successfully.")
-    story.append(Paragraph(tumor_info, styles['Normal']))
-    story.append(Spacer(1, 20))
-    
-    # Original image
-    original_path = os.path.join(app.config["UPLOAD_FOLDER"], image)
-    if os.path.exists(original_path):
-        story.append(Paragraph("Original MRI Scan", styles['Heading3']))
-        img = RLImage(original_path, width=4*inch, height=4*inch)
-        story.append(img)
-        story.append(Spacer(1, 20))
-    
-    # Result image
-    if result_img:
-        result_path = os.path.join(app.config["RESULT_FOLDER"], result_img)
-        if os.path.exists(result_path):
-            story.append(Paragraph("Tumor Localization (YOLOv8 Detection)", styles['Heading3']))
-            img = RLImage(result_path, width=4*inch, height=4*inch)
-            story.append(img)
-            story.append(Spacer(1, 20))
-    
-    # Summary
-    story.append(Paragraph("Clinical Summary", styles['Heading2']))
-    if label == "No Tumor":
-        story.append(Paragraph("✓ No tumor detected. Regular monitoring recommended.", styles['Normal']))
-    else:
-        story.append(Paragraph(f"⚠️ {label} tumor detected. Immediate consultation with a specialist is recommended.", styles['Normal']))
-    
-    # Recommendations
-    if label != "No Tumor":
-        story.append(Spacer(1, 10))
-        story.append(Paragraph("Recommendations", styles['Heading3']))
-        story.append(Paragraph("• Consult with a neurosurgeon within 1-2 weeks", styles['Normal']))
-        story.append(Paragraph("• Bring this report and original MRI to your appointment", styles['Normal']))
-        story.append(Paragraph("• Further imaging may be required for confirmation", styles['Normal']))
-    
-    # Footer
-    story.append(Spacer(1, 30))
-    footer_style = ParagraphStyle(
-        'Footer',
-        parent=styles['Normal'],
-        fontSize=8,
-        textColor=colors.gray,
-        alignment=1
-    )
-    story.append(Paragraph("This report is generated by AI and should be reviewed by a qualified healthcare professional.", footer_style))
-    story.append(Paragraph("© 2024 NeuroScan AI. All rights reserved.", footer_style))
-    
-    doc.build(story)
-    
-    return send_from_directory(
-        app.config["UPLOAD_FOLDER"],
-        pdf_name,
-        as_attachment=True,
-        download_name=pdf_name
-    )
+        idx=random.randint(0,3)
+        label=CLASSES[idx]
+        confidence=random.uniform(0.75,0.99)
+    # YOLO localization
+    result_filename=None
+    if label!="No Tumor":
+        result_filename=detect_tumor_with_yolo(filepath)
+    processing_time=time.time()-start_time
+    user_id=session["user_id"]
+    scan_id=save_scan(user_id,unique_filename,result_filename,label,confidence,processing_time)
+    return render_template("result.html",uploaded_img=unique_filename,
+                           result_img=result_filename,label=label,
+                           confidence=f"{confidence*100:.2f}%",
+                           scan_id=scan_id,processing_time=f"{processing_time:.2f}")
 
 # ---------------- FILE SERVING ---------------- #
 @app.route('/uploads/<filename>')
 @login_required
 def uploaded_file(filename):
-    return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
+    return send_from_directory(UPLOAD_FOLDER, filename)
 
 @app.route('/results/<filename>')
 @login_required
 def result_file(filename):
-    return send_from_directory(app.config["RESULT_FOLDER"], filename)
-
-# ---------------- CLEANUP ROUTE ---------------- #
-@app.route('/cleanup_yolo', methods=['POST'])
-@login_required
-def cleanup_yolo():
-    """Clean up YOLO temporary files"""
-    try:
-        runs_dir = 'runs/detect'
-        if os.path.exists(runs_dir):
-            shutil.rmtree(runs_dir)
-            os.makedirs(runs_dir, exist_ok=True)
-        flash("Temporary files cleaned up", "success")
-    except Exception as e:
-        flash(f"Error cleaning up: {e}", "error")
-    return redirect(url_for('dashboard'))
-
-# ---------------- CONTEXT PROCESSOR ---------------- #
-@app.context_processor
-def utility_processor():
-    return dict(now=datetime.now)
+    return send_from_directory(RESULT_FOLDER, filename)
 
 # ---------------- RUN ---------------- #
-if __name__ == "__main__":
-    # Delete old database if it exists to avoid schema conflicts
+if __name__=="__main__":
     if os.path.exists("database.db"):
         os.remove("database.db")
-        print("🗑️ Removed old database")
-    
     init_db()
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True,host='0.0.0.0',port=5000)
